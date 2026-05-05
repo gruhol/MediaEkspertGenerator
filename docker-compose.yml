@@ -1,0 +1,11 @@
+services:
+  generator:
+    build: .
+    ports:
+      - "8089:8089"
+    environment:
+      - CSV_STANY_URL=https://platon.com.pl/GetData/CommS_GetDataExecute.aspx?CPG=B193A8D8-C264-4DC9-9683-12BDCD7F6DAE&csB2BReports4Customers=E6143633-C060-48BA-7314-71097862EEFA
+      - CSV_PUBLIKACJE_URL=https://platon.com.pl/GetData/CommS_GetDataExecute.aspx?CPG=B193A8D8-C264-4DC9-9683-12BDCD7F6DAE&csB2BReports4Customers=F5E476AB-0B91-4FDB-D9D9-007E28031B82
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

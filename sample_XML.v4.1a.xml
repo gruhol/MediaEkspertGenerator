@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<offer generated="2018-09-06 09:04:12">
+	<article>
+		<brand><![CDATA[TwojaMarka gżegżółka]]></brand>
+		<!-- brand -->
+		<index>1509082</index>
+		<!-- internal index -->
+		<name><![CDATA[name Twojego Produktu masło maślane]]></name>
+		<!-- product name -->
+		<ean>5900805041111</ean>
+		<!-- EAN -->
+		<category><![CDATA[Twoja category Łabędź]]></category>
+		<!-- category name or full breadcrumb like cat1/cat2/cat3/ -->
+		<stock>15</stock>
+		<!-- stock -->
+		<net_price>599.99</net_price>
+		<!-- net price -->
+		<manufacturers_suggested_price>749.99</manufacturers_suggested_price>
+		<!-- (OPTIONAL) manufacturer's suggested gross price - FIELD FILLED ONLY BY MANUFACTURERS! -->
+		<vat>23</vat>
+		<!-- tax for item category [polish] -->
+		<cn_code>29415000</cn_code>
+		<!-- CN Code Please give the code as it appears in the World Customs Organisation's Harmonised System included in amended Regulation (EEC) No 2658/87. -->
+		<length>810</length>
+		<!-- length gross in cm -->
+		<width>420</width>
+		<!-- width gross in cm -->
+		<height>220</height>
+		<!-- height gross in cm -->
+		<net_weight>5.65</net_weight>
+		<!-- net weight in kg -->
+		<gross_weight>7.45</gross_weight>
+		<!-- gross weight in kg -->
+		<pictures>
+			<!-- -->
+			<pic><![CDATA[http://www.twojadomena.pl/zdjecia/12345678]]></pic>
+			<!-- image1 url -->
+			<pic><![CDATA[http://www.twojadomena.pl/zdjecia/12345679]]></pic>
+			<!-- image2 url , etc -->
+		</pictures>
+		<description><![CDATA[Najświętszy z świętych trajektometr, nogą rozbić jego pojawią się zastępując dotychczasowe w pozbawionej stropów i podłóg mijał drzwi kajut, to ściągaczka, którą czarne plamy? Krew. Pograłby na automatach. Jeśliby domyślny Mars wczesnej od drzwi windy ale Ośla Łączka miał brali na próbne loty Pirx mylił się. Nie  automaty nie kłamią? Być Rozdzielone na kropki i kreski oskorupiał mu dłonie; był „w Przestrzeni”! Miał wrażenie, z pętlą, przymocowaną do wierzchu może być? Nie wie, na kropki i kreski głosy!]]></description>
+		<!-- product description, can be html formatted -->
+	</article>
+</offer>
