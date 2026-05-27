@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +47,7 @@ public class Server {
         server.createContext("/output.xml", exchange -> serveFile(exchange));
         server.createContext("/refresh",    exchange -> handleRefresh(exchange, stanyUrl, pubUrl, eanFile, cnyFile));
         server.createContext("/",           exchange -> handleRoot(exchange));
-        server.setExecutor(Executors.newFixedThreadPool(4));
+        server.setExecutor(Executors.newFixedThreadPool(16));
         server.start();
         System.out.println("Serwer uruchomiony na porcie " + port + ", odswiezanie co " + refreshHours + "h");
     }
@@ -75,13 +76,21 @@ public class Server {
         }
     }
 
+    private static final int CONNECT_TIMEOUT_MS = 30_000;
+    private static final int READ_TIMEOUT_MS    = 120_000;
+
     private static String downloadToTemp(String urlStr, String prefix) throws IOException {
         Path tmp = Files.createTempFile(prefix, ".csv");
-        try (InputStream  in  = new URL(urlStr).openStream();
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+        conn.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        conn.setReadTimeout(READ_TIMEOUT_MS);
+        try (InputStream  in  = conn.getInputStream();
              OutputStream out = Files.newOutputStream(tmp)) {
             byte[] buf = new byte[65536];
             int n;
             while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
+        } finally {
+            conn.disconnect();
         }
         return tmp.toString();
     }
@@ -93,12 +102,14 @@ public class Server {
                     "output.xml jeszcze nie istnieje — poczekaj na generowanie lub wywolaj /refresh");
             return;
         }
-        byte[] data = Files.readAllBytes(f.toPath());
         exchange.getResponseHeaders().set("Content-Type", "application/xml; charset=utf-8");
         exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"output.xml\"");
-        exchange.sendResponseHeaders(200, data.length);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(data);
+        exchange.sendResponseHeaders(200, f.length());
+        try (OutputStream os = exchange.getResponseBody();
+             InputStream  is = new FileInputStream(f)) {
+            byte[] buf = new byte[65536];
+            int n;
+            while ((n = is.read(buf)) != -1) os.write(buf, 0, n);
         }
     }
 

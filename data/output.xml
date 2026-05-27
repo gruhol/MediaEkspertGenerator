@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<offer generated="2026-05-05 12:14:13">
+<offer generated="2026-05-05 13:14:43">
 	<article>
 		<brand><![CDATA[G3]]></brand>
 		<index>30848879</index>
@@ -1878,7 +1878,7 @@
 		<name><![CDATA[Puzzle 1000 CherryPazzi  The Living Valley 31513]]></name>
 		<ean>5903728731513</ean>
 		<category><![CDATA[Zabawki\Puzzle\Tradycyjne]]></category>
-		<stock>12</stock>
+		<stock>13</stock>
 		<net_price>32.93</net_price>
 		<manufacturers_suggested_price>40.500000</manufacturers_suggested_price>
 		<vat>23</vat>
@@ -1926,7 +1926,7 @@
 		<name><![CDATA[Puzzle 1000 CherryPazzi Floral Melody 31537]]></name>
 		<ean>5903728731537</ean>
 		<category><![CDATA[Zabawki\Puzzle\Tradycyjne]]></category>
-		<stock>66</stock>
+		<stock>67</stock>
 		<net_price>32.93</net_price>
 		<manufacturers_suggested_price>40.500000</manufacturers_suggested_price>
 		<vat>23</vat>
@@ -3005,7 +3005,7 @@
 		<name><![CDATA[Gra Honeycombs plastry miodu]]></name>
 		<ean>798190005805</ean>
 		<category><![CDATA[Zabawki\Gry]]></category>
-		<stock>38</stock>
+		<stock>37</stock>
 		<net_price>98.63</net_price>
 		<manufacturers_suggested_price>121.320000</manufacturers_suggested_price>
 		<vat>23</vat>
