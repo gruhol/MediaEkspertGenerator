@@ -15,4 +15,4 @@ ENV PORT=8089 \
     EAN_FILE=/app/ean.txt \
     CNY_FILE=/app/cny.txt \
     OUTPUT_FILE=/app/data/output.xml
-CMD ["java", "-Xmx512m", "-jar", "app.jar"]
+CMD ["java", "-Xmx1g", "-jar", "app.jar"]

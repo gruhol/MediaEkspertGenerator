@@ -59,43 +59,33 @@ public class Main {
 
     private static Map<String, Map<String, String>> loadCsv(String path, String keyCol) throws IOException {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
-        List<List<String>> records = parseCsvFile(path);
-        if (records.isEmpty()) return result;
-
-        List<String> headers = records.get(0).stream().map(String::trim).collect(Collectors.toList());
-        int keyIdx = headers.indexOf(keyCol);
-        if (keyIdx < 0) {
-            System.err.println("Brak kolumny '" + keyCol + "' w " + path);
-            return result;
-        }
-
-        for (int i = 1; i < records.size(); i++) {
-            List<String> row = records.get(i);
-            if (row.size() <= keyIdx) continue;
-            String key = row.get(keyIdx).trim();
-            if (key.isEmpty()) continue;
-            Map<String, String> rowMap = new HashMap<>();
-            for (int j = 0; j < headers.size() && j < row.size(); j++) {
-                rowMap.put(headers.get(j), row.get(j));
-            }
-            result.put(key, rowMap);
-        }
-        return result;
-    }
-
-    // Każda linia pliku jest odrębnym rekordem — błędne cudzysłowy w jednej linii
-    // nie zaburzają parsowania kolejnych rekordów.
-    private static List<List<String>> parseCsvFile(String path) throws IOException {
-        List<List<String>> records = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new FileInputStream(path), StandardCharsets.UTF_8))) {
+
+            String headerLine = reader.readLine();
+            if (headerLine == null) return result;
+            List<String> headers = parseLine(headerLine).stream().map(String::trim).collect(Collectors.toList());
+            int keyIdx = headers.indexOf(keyCol);
+            if (keyIdx < 0) {
+                System.err.println("Brak kolumny '" + keyCol + "' w " + path);
+                return result;
+            }
+
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                records.add(parseLine(line));
+                List<String> row = parseLine(line);
+                if (row.size() <= keyIdx) continue;
+                String key = row.get(keyIdx).trim();
+                if (key.isEmpty()) continue;
+                Map<String, String> rowMap = new HashMap<>();
+                for (int j = 0; j < headers.size() && j < row.size(); j++) {
+                    rowMap.put(headers.get(j), row.get(j));
+                }
+                result.put(key, rowMap);
             }
         }
-        return records;
+        return result;
     }
 
     private static List<String> parseLine(String line) {
