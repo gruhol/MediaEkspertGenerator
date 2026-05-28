@@ -34,10 +34,16 @@ public class Main {
         Map<String, String> cnCodes = loadCnCodes(cnyFile);
 
         System.out.println("Wczytywanie stanow: " + stanyFile);
-        Map<String, Map<String, String>> stany = loadCsv(stanyFile, "KodTowaru");
+        Set<String> stanyKolumny = new HashSet<>(Arrays.asList("Stan100", "Cena netto po rabacie"));
+        Map<String, Map<String, String>> stany = loadCsv(stanyFile, "KodTowaru", stanyKolumny);
 
         System.out.println("Wczytywanie publikacji: " + pubFile);
-        Map<String, Map<String, String>> pub = loadCsv(pubFile, "KodTowaru");
+        Set<String> pubKolumny = new HashSet<>(Arrays.asList(
+                "Wydawnictwo", "IdTowaru", "Nazwa", "Kategoria",
+                "CenaDetalicznaBrutto", "VAT",
+                "Szerokosc", "Wysokosc", "Glebokosc", "Waga",
+                "URLOkladka", "URLZdjeciaUzupelniajace", "Opis"));
+        Map<String, Map<String, String>> pub = loadCsv(pubFile, "KodTowaru", pubKolumny);
 
         System.out.println("Generowanie XML: " + outFile);
         generateXml(eans, cnCodes, stany, pub, outFile);
@@ -57,8 +63,8 @@ public class Main {
 
     }
 
-    private static Map<String, Map<String, String>> loadCsv(String path, String keyCol) throws IOException {
-        Map<String, Map<String, String>> result = new LinkedHashMap<>();
+    private static Map<String, Map<String, String>> loadCsv(String path, String keyCol, Set<String> keepCols) throws IOException {
+        Map<String, Map<String, String>> result = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new FileInputStream(path), StandardCharsets.UTF_8))) {
 
@@ -80,7 +86,8 @@ public class Main {
                 if (key.isEmpty()) continue;
                 Map<String, String> rowMap = new HashMap<>();
                 for (int j = 0; j < headers.size() && j < row.size(); j++) {
-                    rowMap.put(headers.get(j), row.get(j));
+                    String col = headers.get(j);
+                    if (keepCols.contains(col)) rowMap.put(col, row.get(j));
                 }
                 result.put(key, rowMap);
             }
