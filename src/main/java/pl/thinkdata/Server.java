@@ -20,6 +20,7 @@ public class Server {
     private static final AtomicBoolean generating = new AtomicBoolean(false);
     private static final AtomicReference<String> lastGenerated = new AtomicReference<>("nigdy");
     private static String outputFile;
+    private static String lastGeneratedFile;
 
     public static void main(String[] args) throws Exception {
         String stanyUrl = System.getenv("CSV_STANY_URL");
@@ -27,7 +28,8 @@ public class Server {
         String eanFile  = System.getenv().getOrDefault("EAN_FILE",  "/app/ean.txt");
         String cnyFile  = System.getenv().getOrDefault("CNY_FILE",  "/app/cny.txt");
         int port        = Integer.parseInt(System.getenv().getOrDefault("PORT", "8089"));
-        outputFile      = System.getenv().getOrDefault("OUTPUT_FILE", "/app/data/output.xml");
+        outputFile          = System.getenv().getOrDefault("OUTPUT_FILE", "/app/data/output.xml");
+        lastGeneratedFile   = Paths.get(outputFile).getParent().resolve("last_generated.txt").toString();
 
         if (stanyUrl == null || pubUrl == null) {
             System.err.println("Wymagane zmienne: CSV_STANY_URL, CSV_PUBLIKACJE_URL");
@@ -37,6 +39,10 @@ public class Server {
         int refreshHours = Integer.parseInt(System.getenv().getOrDefault("REFRESH_HOURS", "1"));
 
         Files.createDirectories(Paths.get(outputFile).getParent());
+
+        Path lgPath = Paths.get(lastGeneratedFile);
+        if (Files.exists(lgPath))
+            lastGenerated.set(Files.readString(lgPath).trim());
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(
@@ -65,7 +71,9 @@ public class Server {
             System.out.println("Pobieranie: " + pubUrl);
             pubTmp = downloadToTemp(pubUrl, "pub");
             Main.run(eanFile, cnyFile, stanyTmp, pubTmp, outputFile);
-            lastGenerated.set(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            lastGenerated.set(ts);
+            try { Files.writeString(Paths.get(lastGeneratedFile), ts); } catch (Exception ignored) {}
         } catch (Exception e) {
             System.err.println("Blad generowania: " + e.getMessage());
             e.printStackTrace();
