@@ -49,11 +49,17 @@ public class Server {
                 () -> generate(stanyUrl, pubUrl, eanFile, cnyFile),
                 0, refreshHours, TimeUnit.HOURS);
 
+        // Ochrona przed botami trzymającymi połączenia bez wysyłania żądania.
+        // Wartości w sekundach — muszą być ustawione przed HttpServer.create().
+        System.setProperty("sun.net.httpserver.maxReqTime", "30");
+        System.setProperty("sun.net.httpserver.maxRspTime", "120");
+        System.setProperty("sun.net.httpserver.idleInterval", "30");
+
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/output.xml", exchange -> serveFile(exchange));
         server.createContext("/refresh",    exchange -> handleRefresh(exchange, stanyUrl, pubUrl, eanFile, cnyFile));
         server.createContext("/",           exchange -> handleRoot(exchange));
-        server.setExecutor(Executors.newFixedThreadPool(16));
+        server.setExecutor(Executors.newFixedThreadPool(32));
         server.start();
         System.out.println("Serwer uruchomiony na porcie " + port + ", odswiezanie co " + refreshHours + "h");
     }
