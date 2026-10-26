@@ -37,7 +37,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER_USER}@${DEPLOY_SERVER_HOST} \
                             'cd ${DEPLOY_DIR} && \
                              docker compose down && \
-                             docker compose build --no-cache && \
+                             docker compose build --no-cache --pull && \
                              docker compose up -d'
                     """
                 }
